@@ -10,6 +10,11 @@
   const $todoInput = get(".todo_input");
   const API_URL = `http://localhost:3000/todos`;
 
+  let currentPage = 1;
+  const totalCount = 53;
+  const pageCount = 5;
+  const limit = 5;
+
   const createTodoElement = (item) => {
     const { id, content, completed } = item;
     const isChecked = completed ? "checked" : "";
@@ -54,8 +59,9 @@
     });
   };
 
+  //JSON에서 todos가져오기
   const getTodos = () => {
-    fetch(API_URL)
+    fetch(`${API_URL}?_page=${currentPage}&_limit=${limit}`) //JSON서버 깃 참고
       .then((response) => response.json())
       .then((todos) => {
         renderAllTodos(todos);
