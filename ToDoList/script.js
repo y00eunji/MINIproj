@@ -150,6 +150,20 @@
       .catch((error) => console.error(error.message));
   };
 
+  //todo 삭제
+  const removeTodo = (e) => {
+    if (e.target.className !== "todo_remove_button") return;
+    const $item = e.target.closest(".item");
+    const id = $item.dataset.id;
+
+    fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(getTodos)
+      .catch((error) => console.error(error.message));
+  };
+
   const init = () => {
     window.addEventListener("DOMContentLoaded", () => {
       getTodos();
