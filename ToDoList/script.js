@@ -63,8 +63,10 @@
       .catch((error) => console.error(error.message));
   };
 
+  //일정 입력하면 리스트에 추가하기
   const addTodo = (e) => {
-    e.preventDefault(); // 새로고침이 안되게 하는 것
+    // 새로고침이 안되게 하는 것
+    e.preventDefault();
     const content = $todoInput.value;
     if (!content) return;
     const todo = {
@@ -79,9 +81,26 @@
       .then((response) => response.json())
       .then(getTodos)
       .then(() => {
-        $todoInput.value = ""; // 일정 쓰고 나서초기화
+        $todoInput.value = "";
         $todoInput.focus();
       })
+      .catch((error) => console.error(error.message));
+  };
+
+  //체크박스
+  const toggleTodo = (e) => {
+    if (e.target.className !== "todo_checkbox") return;
+    const $item = e.target.closest(".item"); //체크박스 기준으로 가장 가까운 item 클래스를 찾아줌
+    const id = $item.dataset.id;
+    const completed = e.target.checked;
+    fetch(`${API_URL}/${id}`, {
+      //url주소
+      method: "PATCH", //부분적으로 변경하는 거라서 patch
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ completed }),
+    })
+      .then((response) => response.json())
+      .then(getTodos)
       .catch((error) => console.error(error.message));
   };
 
