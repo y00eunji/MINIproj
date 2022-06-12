@@ -104,6 +104,52 @@
       .catch((error) => console.error(error.message));
   };
 
+  //수정모드로 바꾸기 , 수정 누르면 버튼 모양 바뀜
+  const changeEditMode = (e) => {
+    const $item = e.target.closest(".item");
+    const $label = $item.querySelector("label");
+    const $editInput = $item.querySelector('input[type="text"]');
+    const $contentButtons = $item.querySelector(".content_buttons");
+    const $editButtons = $item.querySelector(".edit_buttons");
+    const value = $editInput.value;
+
+    if (e.target.className === "todo_edit_button") {
+      $label.style.display = "none";
+      $editInput.style.display = "block";
+      $contentButtons.style.display = "none";
+      $editButtons.style.display = "block";
+      $editInput.focus(); //수정 시 포커스 주기
+      $editInput.value = ""; //커서를 맨뒤로 보내기 위함, 먼저 아예 다 삭제하고
+      $editInput.value = value; //기존에 있던 내용을 넣어주면, 커서가 맨 뒤로감
+    }
+
+    if (e.target.className === "todo_edit_cancel_button") {
+      $label.style.display = "block";
+      $editInput.style.display = "none";
+      $contentButtons.style.display = "block";
+      $editButtons.style.display = "none";
+      $editInput.value = $label.innerText;
+    }
+  };
+
+  //수정한 TODO
+  const editTodo = (e) => {
+    if (e.target.className !== "todo_edit_confirm_button") return;
+    const $item = e.target.closest(".item");
+    const id = $item.dataset.id;
+    const $editInput = $item.querySelector('input[type="text"]');
+    const content = $editInput.value;
+
+    fetch(`${API_URL}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ content }),
+    })
+      .then((response) => response.json())
+      .then(getTodos)
+      .catch((error) => console.error(error.message));
+  };
+
   const init = () => {
     window.addEventListener("DOMContentLoaded", () => {
       getTodos();
