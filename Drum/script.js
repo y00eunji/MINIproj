@@ -9,6 +9,7 @@
     return document.querySelectorAll(target);
   };
 
+  /* 유사 배열 객체 만들어줌 */
   const keys = Array.from(getAll(".key"));
   const soundsRoot = "assets/sounds/";
   const drumSounds = [
